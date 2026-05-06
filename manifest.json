@@ -12,7 +12,7 @@
         "changelog": "Jellyfin 10.11+ API fixes",
         "checksum": "bc71f95e7de7108f6d31a7dda13303ad",
         "sourceUrl": "https://github.com/lukefanning/jellyfin-filename-title/releases/download/v1.2.0/Jellyfin.Plugin.FilenameTitlePlugin.zip",
-        "targetAbi": "10.11.0.0",
+        "targetAbi": "10.9.0.0",
         "timestamp": "2026-05-06T00:00:00Z",
         "version": "1.2.0.0"
       },
