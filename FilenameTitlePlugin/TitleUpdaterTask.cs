@@ -29,9 +29,57 @@ public class TitleUpdaterTask : IScheduledTask
 
     public IEnumerable<TaskTriggerInfo> GetDefaultTriggers() => [];
 
+    /// <summary>
+    /// Compatibility helper method to handle API changes between Jellyfin versions.
+    /// In Jellyfin 10.10+, GetItemList was replaced with GetItemsResult.
+    /// </summary>
+    /// <param name="query">The query to execute.</param>
+    /// <returns>List of items matching the query.</returns>
+    private IReadOnlyList<BaseItem> GetItems(InternalItemsQuery query)
+    {
+        // Use reflection to check which method is available
+        var libraryManagerType = _libraryManager.GetType();
+
+        // First try GetItemsResult (Jellyfin 10.10+)
+        var getItemsResultMethod = libraryManagerType.GetMethod("GetItemsResult");
+        if (getItemsResultMethod != null)
+        {
+            _logger.LogInformation("[FilenameTitlePlugin] Using compatibility method: GetItemsResult (Jellyfin 10.10+)");
+            var result = getItemsResultMethod.Invoke(_libraryManager, new object[] { query });
+            if (result != null)
+            {
+                var itemsProperty = result.GetType().GetProperty("Items");
+                if (itemsProperty != null)
+                {
+                    var items = itemsProperty.GetValue(result) as IReadOnlyList<BaseItem>;
+                    if (items != null)
+                    {
+                        return items;
+                    }
+                }
+            }
+        }
+
+        // Fall back to GetItemList (Jellyfin 10.9.x and earlier)
+        var getItemListMethod = libraryManagerType.GetMethod("GetItemList");
+        if (getItemListMethod != null)
+        {
+            _logger.LogInformation("[FilenameTitlePlugin] Using compatibility method: GetItemList (Jellyfin 10.9.x and earlier)");
+            var items = getItemListMethod.Invoke(_libraryManager, new object[] { query }) as IReadOnlyList<BaseItem>;
+            if (items != null)
+            {
+                return items;
+            }
+        }
+
+        // If neither method is found, return empty list
+        _logger.LogWarning("[FilenameTitlePlugin] Neither GetItemsResult nor GetItemList methods found on ILibraryManager - plugin may not work correctly with this Jellyfin version");
+        return new List<BaseItem>();
+    }
+
     public async Task ExecuteAsync(IProgress<double> progress, CancellationToken cancellationToken)
     {
-        var items = _libraryManager.GetItemList(new InternalItemsQuery
+        var items = GetItems(new InternalItemsQuery
         {
             IsFolder = false,
             Recursive = true
