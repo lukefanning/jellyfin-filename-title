@@ -40,7 +40,7 @@ public class Plugin : BasePlugin<PluginConfiguration>, IDisposable
         // Safety rule: only update if the current title is still the raw filename
         // (i.e., no metadata provider has set a real title)
         var rawName = Path.GetFileNameWithoutExtension(item.Path);
-        if (!string.Equals(item.Name, rawName, StringComparison.OrdinalIgnoreCase))
+        if (!string.Equals(item.Name, rawName, StringComparison.OrdinalIgnoreCase) && !item.FileNameWithoutExtension.Contains("[One Pace]"))
         {
             return;
         }

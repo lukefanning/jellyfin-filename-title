@@ -105,7 +105,7 @@ public class TitleUpdaterTask : IScheduledTask
                     var rawName = Path.GetFileNameWithoutExtension(item.Path);
 
                     // Safety rule: only update items whose title is still the raw filename
-                    if (string.Equals(item.Name, rawName, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(item.Name, rawName, StringComparison.OrdinalIgnoreCase) || item.FileNameWithoutExtension.Contains("[One Pace]"))
                     {
                         var cleanTitle = _cleaner.Clean(item.Path);
 
