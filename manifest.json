@@ -9,6 +9,14 @@
     "owner": "adielsa",
     "versions": [
       {
+        "changelog": "One Pace support; Jellyfin 10.11+ API fixes",
+        "checksum": "69c8ff110876b3b782beb6688e579ab2",
+        "sourceUrl": "https://github.com/lukefanning/jellyfin-filename-title/releases/download/one-pace/Jellyfin.Plugin.FilenameTitlePlugin.zip",
+        "targetAbi": "10.9.0.0",
+        "timestamp": "2026-05-06T00:00:00Z",
+        "version": "1.2.0.0"
+      },
+      {
         "changelog": "Jellyfin 10.11+ API fixes",
         "checksum": "147a1e0c24ebf4e56e3be9d349366789",
         "sourceUrl": "https://github.com/lukefanning/jellyfin-filename-title/releases/download/v1.2.0/Jellyfin.Plugin.FilenameTitlePlugin.zip",
